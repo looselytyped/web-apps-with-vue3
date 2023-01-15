@@ -33,7 +33,7 @@
       <v-container fluid>
         <div class="d-flex justify-start mb-6" style="width: 100%">
           <v-card class="ma-3 pa-3" style="width: 100%">
-            <!-- When using `HelloWorld` use that component here -->
+            <HelloWorld />
           </v-card>
         </div>
       </v-container>
@@ -47,6 +47,8 @@
 
 <script setup>
 import { ref } from "vue";
+
+import HelloWorld from "@/components/HelloWorld.vue";
 
 const headerFooterColor = "light-green lighten-2";
 const items = [
