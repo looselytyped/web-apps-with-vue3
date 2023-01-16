@@ -30,13 +30,7 @@
 
     <v-main>
       <!-- When using `PeopleList` replace this entire block -->
-      <v-container fluid>
-        <div class="d-flex justify-start mb-6" style="width: 100%">
-          <v-card class="ma-3 pa-3" style="width: 100%">
-            <HelloWorld />
-          </v-card>
-        </div>
-      </v-container>
+      <PeopleList />
     </v-main>
 
     <v-footer app :color="headerFooterColor" class="text-white" :inset="true">
@@ -48,7 +42,7 @@
 <script setup>
 import { ref } from "vue";
 
-import HelloWorld from "@/components/HelloWorld.vue";
+import PeopleList from "@/components/PeopleList.vue";
 
 const headerFooterColor = "light-green lighten-2";
 const items = [
