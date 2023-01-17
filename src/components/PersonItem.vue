@@ -13,7 +13,8 @@ const props = defineProps({
   },
 });
 
-const like = () => (props.friend.fav = !props.friend.fav);
+const emit = defineEmits(["friend-liked"]);
+const like = () => emit("friend-liked", props.friend);
 const fullName = computed(() => {
   return `${props.friend.firstName} ${props.friend.lastName}`;
 });

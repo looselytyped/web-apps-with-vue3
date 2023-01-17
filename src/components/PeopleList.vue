@@ -8,6 +8,7 @@
             :key="friend.id"
             :friend="friend"
             :last="index === friends.length - 1"
+            @friend-liked="like($event)"
           />
         </v-list>
       </v-card>
