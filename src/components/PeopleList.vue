@@ -21,45 +21,22 @@
 
 <script setup>
 import { ref } from "vue";
+import { onMounted } from "vue";
+
+import axios from "axios";
 
 import PersonItem from "@/components/PersonItem.vue";
 
-const friendsMockData = [
-  {
-    id: 1,
-    firstName: "Michelle",
-    lastName: "Mulroy",
-    gender: "female",
-    fav: true,
-  },
-  {
-    id: 2,
-    firstName: "Venkat",
-    lastName: "Subramanian",
-    gender: "male",
-    fav: true,
-  },
-  {
-    id: 3,
-    firstName: "Matt",
-    lastName: "Forsythe",
-    gender: "none",
-    fav: false,
-  },
-  {
-    id: 4,
-    firstName: "Nate",
-    lastName: "Schutta",
-    gender: "male",
-    fav: false,
-  },
-];
-
-const friends = ref(friendsMockData);
+const friends = ref([]);
 
 const like = (f) => {
   f.fav = !f.fav;
 };
+
+onMounted(async () => {
+  const resp = await axios.get("http://localhost:3000/friends");
+  friends.value = resp.data;
+});
 </script>
 
 <style scoped></style>
