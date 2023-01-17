@@ -29,8 +29,11 @@ import PersonItem from "@/components/PersonItem.vue";
 
 const friends = ref([]);
 
-const like = (f) => {
+const like = async (f) => {
   f.fav = !f.fav;
+  await axios.patch(`http://localhost:3000/friends/${f.id}`, {
+    fav: f.fav,
+  });
 };
 
 onMounted(async () => {
