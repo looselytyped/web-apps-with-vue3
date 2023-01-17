@@ -11,7 +11,7 @@
       <v-list density="compact">
         <template v-for="(item, i) of items" :key="i">
           <v-divider dark v-if="item.divider" class="my-3"></v-divider>
-          <v-list-item v-else :value="item">
+          <v-list-item v-else :value="item" :to="{ name: item.routeName }">
             <template v-slot:prepend>
               <v-icon :icon="item.icon"></v-icon>
             </template>
@@ -29,8 +29,7 @@
     </v-app-bar>
 
     <v-main>
-      <!-- When using `PeopleList` replace this entire block -->
-      <PeopleList />
+      <router-view />
     </v-main>
 
     <v-footer app :color="headerFooterColor" class="text-white" :inset="true">
@@ -42,12 +41,10 @@
 <script setup>
 import { ref } from "vue";
 
-import PeopleList from "@/components/PeopleList.vue";
-
 const headerFooterColor = "light-green lighten-2";
 const items = [
-  { icon: "mdi-view-dashboard", text: "Dashboard" },
-  { icon: "mdi-contacts", text: "Contacts" },
+  { icon: "mdi-view-dashboard", text: "Dashboard", routeName: "dashboard" },
+  { icon: "mdi-contacts", text: "Contacts", routeName: "people" },
   { divider: true },
   { icon: "mdi-clock", text: "Stay tuned!" },
 ];
