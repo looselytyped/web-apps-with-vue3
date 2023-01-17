@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from "vue";
+
 const props = defineProps({
   friend: {
     type: Object,
@@ -12,13 +14,15 @@ const props = defineProps({
 });
 
 const like = () => (props.friend.fav = !props.friend.fav);
+const fullName = computed(() => {
+  return `${props.friend.firstName} ${props.friend.lastName}`;
+});
 </script>
 
 <template>
   <v-list-item>
     <v-list-item-title class="d-flex justify-start">
-      {{ friend.firstName }}
-      {{ friend.lastName }}
+      {{ fullName }}
       <v-spacer />
 
       <div class="d-flex justify-end">
