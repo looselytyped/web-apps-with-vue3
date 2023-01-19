@@ -13,7 +13,9 @@
         </v-list>
       </v-card>
       <div class="d-flex justify-end mb-6">
-        <v-btn color="success" dark large>Add Friend</v-btn>
+        <v-btn color="success" dark large :to="{ name: 'addEditPerson' }">
+          Add Friend
+        </v-btn>
       </div>
     </v-row>
   </v-container>
