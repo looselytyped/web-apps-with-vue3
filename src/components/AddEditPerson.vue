@@ -1,13 +1,15 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { onMounted } from "vue";
+
 import axios from "axios";
 
 const nameRules = [(v) => !!v || "Name is required"];
 
 const form = ref(null);
 const valid = ref(true);
-const selectedFriend = ref({
+let selectedFriend = ref({
   firstName: "",
   lastName: "",
   gender: "male",
@@ -21,16 +23,47 @@ const genders = {
   undisclosed: "undisclosed",
 };
 
+let editing = false;
+
+const props = defineProps({
+  id: {
+    type: Number,
+  },
+});
+
 const submit = async () => {
   const submission = {
     ...selectedFriend.value,
   };
-  await axios.post("http://localhost:3000/friends", submission);
+
+  if (editing) {
+    await axios.put(
+      `http://localhost:3000/friends/${submission.id}`,
+      submission
+    );
+  } else {
+    await axios.post("http://localhost:3000/friends", submission);
+  }
   router.push({ name: "people" });
 };
 
+onMounted(async () => {
+  if (props.id) {
+    const editItem = await axios.get(
+      `http://localhost:3000/friends/${props.id}`
+    );
+    editing = true;
+    selectedFriend.value = editItem.data;
+  }
+});
+
 const reset = () => {
   form.value.reset();
+};
+
+const canSubmit = () => {
+  form.value?.validate();
+  return valid.value;
 };
 </script>
 
@@ -66,7 +99,12 @@ const reset = () => {
         <v-radio label="Undisclosed" :value="genders.undisclosed"></v-radio>
       </v-radio-group>
 
-      <v-btn color="success" class="mr-4" :disabled="!valid" @click="submit">
+      <v-btn
+        color="success"
+        class="mr-4"
+        :disabled="!canSubmit"
+        @click="submit"
+      >
         Submit
       </v-btn>
       <v-btn color="error" class="mr-4" @click="reset"> Reset Form </v-btn>

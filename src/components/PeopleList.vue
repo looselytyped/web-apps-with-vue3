@@ -9,6 +9,7 @@
             :friend="friend"
             :last="index === friends.length - 1"
             @friend-liked="like($event)"
+            @friend-edited="edit"
           />
         </v-list>
       </v-card>
@@ -24,12 +25,21 @@
 <script setup>
 import { ref } from "vue";
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 import axios from "axios";
 
 import PersonItem from "@/components/PersonItem.vue";
 
 const friends = ref([]);
+const router = useRouter();
+
+const edit = (friend) => {
+  router.push({
+    name: "editFriend",
+    params: { friendId: friend.id },
+  });
+};
 
 const like = async (f) => {
   f.fav = !f.fav;

@@ -13,11 +13,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["friend-liked"]);
+const emit = defineEmits(["friend-liked", "friend-edited"]);
 const like = () => emit("friend-liked", props.friend);
 const fullName = computed(() => {
   return `${props.friend.firstName} ${props.friend.lastName}`;
 });
+const itemEdited = (friend) => emit("friend-edited", friend);
 </script>
 
 <template>
@@ -28,7 +29,9 @@ const fullName = computed(() => {
 
       <div class="d-flex justify-end">
         <v-btn density="comfortable" variant="plain" icon>
-          <v-icon class="edit"> mdi-pencil </v-icon>
+          <v-icon class="edit" @click.stop="itemEdited(friend)">
+            mdi-pencil
+          </v-icon>
         </v-btn>
         <v-btn
           density="comfortable"

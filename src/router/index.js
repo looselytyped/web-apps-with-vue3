@@ -26,6 +26,12 @@ const router = createRouter({
           name: "addEditPerson",
           component: AddEditPerson,
         },
+        {
+          path: ":friendId/edit",
+          name: "editFriend",
+          component: AddEditPerson,
+          props: (route) => ({ id: Number(route.params.friendId) }),
+        },
       ],
     },
     {
