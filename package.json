@@ -34,6 +34,7 @@
     "prettier": "^2.7.1",
     "start-server-and-test": "^1.15.2",
     "vite": "^4.0.0",
+    "vite-plugin-vuetify": "^1.0.2",
     "vitest": "^0.25.6"
   }
 }
