@@ -3,13 +3,13 @@ import { ref } from "vue";
 import { computed } from "vue";
 import { onMounted } from "vue";
 
-import axios from "axios";
+import { friendService } from "@/api/friend.service";
 
 const friends = ref([]);
 const favCount = computed(() => friends.value.filter((f) => f.fav).length);
 
 onMounted(async () => {
-  const resp = await axios.get("http://localhost:3000/friends");
+  const resp = await friendService.getAll();
   friends.value = resp.data;
 });
 </script>

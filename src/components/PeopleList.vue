@@ -27,7 +27,7 @@ import { ref } from "vue";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-import axios from "axios";
+import { friendService } from "@/api/friend.service";
 
 import PersonItem from "@/components/PersonItem.vue";
 
@@ -43,13 +43,11 @@ const edit = (friend) => {
 
 const like = async (f) => {
   f.fav = !f.fav;
-  await axios.patch(`http://localhost:3000/friends/${f.id}`, {
-    fav: f.fav,
-  });
+  await friendService.patchFavorite(f.id, { fav: f.fav });
 };
 
 onMounted(async () => {
-  const resp = await axios.get("http://localhost:3000/friends");
+  const resp = await friendService.getAll();
   friends.value = resp.data;
 });
 </script>

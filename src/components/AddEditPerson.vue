@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 
-import axios from "axios";
+import { friendService } from "@/api/friend.service";
 
 const nameRules = [(v) => !!v || "Name is required"];
 
@@ -37,23 +37,19 @@ const submit = async () => {
   };
 
   if (editing) {
-    await axios.put(
-      `http://localhost:3000/friends/${submission.id}`,
-      submission
-    );
+    await friendService.update(submission);
   } else {
-    await axios.post("http://localhost:3000/friends", submission);
+    await friendService.create(submission);
   }
   router.push({ name: "people" });
 };
 
 onMounted(async () => {
   if (props.id) {
-    const editItem = await axios.get(
-      `http://localhost:3000/friends/${props.id}`
-    );
+    const resp = await friendService.get(props.id);
+
     editing = true;
-    selectedFriend.value = editItem.data;
+    selectedFriend.value = resp.data;
   }
 });
 
