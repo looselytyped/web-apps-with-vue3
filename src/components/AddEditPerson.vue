@@ -72,6 +72,7 @@ const canSubmit = () => {
         label="First name*"
         validate-on="blur"
         required
+        id="firstName"
       ></v-text-field>
 
       <v-text-field
@@ -80,6 +81,7 @@ const canSubmit = () => {
         label="Last name*"
         validate-on="blur"
         required
+        id="lastName"
       ></v-text-field>
 
       <v-checkbox
@@ -100,6 +102,7 @@ const canSubmit = () => {
         class="mr-4"
         :disabled="!canSubmit"
         @click="submit"
+        id="submit"
       >
         Submit
       </v-btn>
