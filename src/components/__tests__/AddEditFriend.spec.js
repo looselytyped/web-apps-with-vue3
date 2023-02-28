@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
 
 import { mount, flushPromises } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
+import { setActivePinia } from "pinia";
 
 import { createVuetify } from "vuetify";
 
 import AddEditPerson from "../AddEditPerson.vue";
-import { friendService } from "@/api/friend.service";
-
-vi.mock("../../api/friend.service");
+import { useFriendStore } from "@/stores/friends";
 
 describe("AddEditFriend", () => {
   const vuetify = createVuetify();
@@ -22,9 +22,13 @@ describe("AddEditFriend", () => {
     it("first/last name are required", async () => {
       expect.assertions(2);
 
+      const pinia = createTestingPinia();
+      setActivePinia(pinia);
+      useFriendStore();
+
       const wrapper = mount(AddEditPerson, {
         global: {
-          plugins: [vuetify],
+          plugins: [vuetify, pinia],
         },
       });
       await flushPromises();
@@ -40,9 +44,13 @@ describe("AddEditFriend", () => {
   it("should be valid after all required fields are input", async () => {
     expect.assertions(1);
 
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+    useFriendStore();
+
     const wrapper = mount(AddEditPerson, {
       global: {
-        plugins: [vuetify],
+        plugins: [vuetify, pinia],
       },
     });
     await flushPromises();
@@ -75,14 +83,17 @@ describe("AddEditFriend", () => {
     it("should invoke the service to create a new friend", async () => {
       expect.assertions(1);
 
-      friendService.create = vi.fn();
+      const pinia = createTestingPinia();
+      setActivePinia(pinia);
+      const store = useFriendStore();
 
       const wrapper = mount(AddEditPerson, {
         global: {
-          plugins: [vuetify],
+          plugins: [vuetify, pinia],
         },
       });
       await flushPromises();
+      await wrapper.vm.$nextTick();
 
       const firstName = wrapper.find("#firstName");
       firstName.element.value = "Jane";
@@ -95,7 +106,7 @@ describe("AddEditFriend", () => {
       await wrapper.vm.$nextTick();
 
       wrapper.find("#submit").trigger("click");
-      expect(friendService.create).toBeCalledWith({
+      expect(store.addFriend).toBeCalledWith({
         firstName: "Jane",
         lastName: "Smith",
         gender: "male",

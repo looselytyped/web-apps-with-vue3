@@ -1,27 +1,27 @@
-import { beforeEach, describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
-import { mount, shallowMount, flushPromises } from "@vue/test-utils";
+import { mount, flushPromises } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
+import { setActivePinia } from "pinia";
 
 import PeopleList from "../PeopleList.vue";
 import PersonItem from "@/components/PersonItem.vue";
-import { friendService } from "../../api/friend.service";
-
-vi.mock("../../api/friend.service");
+import { useFriendStore } from "@/stores/friends";
 
 describe("PersonList", async () => {
   vi.mock("vue-router", () => ({
     useRouter: vi.fn(),
   }));
 
-  beforeEach(() => {
-    friendService.getAll.mockReset();
-  });
-
   it("has a mounted hook", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
-    const mockFn = friendService.getAll.mockResolvedValue({
-      data: [
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
+    const store = useFriendStore();
+    store.$patch({
+      friends: [
         {
           id: 1,
           firstName: "John",
@@ -39,18 +39,25 @@ describe("PersonList", async () => {
       ],
     });
 
-    const wrapper = mount(PeopleList);
+    mount(PeopleList, {
+      global: {
+        plugins: [pinia],
+      },
+    });
     await flushPromises();
 
-    expect(mockFn).toHaveBeenCalled(1);
-    expect(wrapper.vm.friends).toHaveLength(2);
+    expect(store.fetchFriends).toHaveBeenCalled(1);
   });
 
   it("should render two PersonItem(s)", async () => {
     expect.assertions(1);
 
-    friendService.getAll.mockResolvedValue({
-      data: [
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
+    const store = useFriendStore();
+    store.$patch({
+      friends: [
         {
           id: 1,
           firstName: "John",
@@ -68,18 +75,27 @@ describe("PersonList", async () => {
       ],
     });
 
-    const wrapper = await shallowMount(PeopleList);
+    const wrapper = mount(PeopleList, {
+      global: {
+        plugins: [pinia],
+      },
+    });
     await flushPromises();
 
     expect(wrapper.findAllComponents(PersonItem)).toHaveLength(2);
   });
 
   it("renders Add Friend correctly", async () => {
-    // expect.assertions(2);
+    expect.assertions(2);
 
-    friendService.getAll.mockResolvedValue({ data: [] });
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
 
-    const wrapper = await mount(PeopleList);
+    const wrapper = mount(PeopleList, {
+      global: {
+        plugins: [pinia],
+      },
+    });
     await flushPromises();
 
     expect(wrapper.find("v-btn").attributes("to")).toBeDefined();

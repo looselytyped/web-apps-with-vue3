@@ -1,16 +1,12 @@
 <script setup>
-import { ref } from "vue";
-import { computed } from "vue";
 import { onMounted } from "vue";
 
-import { friendService } from "@/api/friend.service";
+import { useFriendStore } from "../stores/friends";
 
-const friends = ref([]);
-const favCount = computed(() => friends.value.filter((f) => f.fav).length);
+const store = useFriendStore();
 
 onMounted(async () => {
-  const resp = await friendService.getAll();
-  friends.value = resp.data;
+  await store.fetchFriends();
 });
 </script>
 
@@ -22,7 +18,7 @@ onMounted(async () => {
           <v-card-item title="Contacts"></v-card-item>
           <v-card-text class="py-3">
             <v-row>
-              <v-col class="text-h2">{{ friends.length }}</v-col>
+              <v-col class="text-h2">{{ store.friendsCount }}</v-col>
 
               <v-col class="text-right">
                 <v-icon color="error" icon="mdi-contacts" size="60"></v-icon>
@@ -36,7 +32,7 @@ onMounted(async () => {
           <v-card-item title="Favs"></v-card-item>
           <v-card-text class="py-3">
             <v-row>
-              <v-col class="text-h2">{{ favCount }}</v-col>
+              <v-col class="text-h2">{{ store.favFriendsCount }}</v-col>
 
               <v-col class="text-right">
                 <v-icon color="error" icon="mdi-heart" size="60"></v-icon>

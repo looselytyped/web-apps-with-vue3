@@ -4,10 +4,10 @@
       <v-card class="d-flex justify-start mx-4" style="width: 100%">
         <v-list header style="width: 100%">
           <PersonItem
-            v-for="(friend, index) of friends"
+            v-for="(friend, index) of store.friends"
             :key="friend.id"
             :friend="friend"
-            :last="index === friends.length - 1"
+            :last="index === store.friends.length - 1"
             @friend-liked="like($event)"
             @friend-edited="edit"
           />
@@ -23,15 +23,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-import { friendService } from "@/api/friend.service";
+import { useFriendStore } from "../stores/friends";
 
 import PersonItem from "@/components/PersonItem.vue";
 
-const friends = ref([]);
+const store = useFriendStore();
 const router = useRouter();
 
 const edit = (friend) => {
@@ -42,13 +41,11 @@ const edit = (friend) => {
 };
 
 const like = async (f) => {
-  f.fav = !f.fav;
-  await friendService.patchFavorite(f.id, { fav: f.fav });
+  f.fav ? await store.unlike(f) : await store.like(f);
 };
 
 onMounted(async () => {
-  const resp = await friendService.getAll();
-  friends.value = resp.data;
+  await store.fetchFriends();
 });
 </script>
 

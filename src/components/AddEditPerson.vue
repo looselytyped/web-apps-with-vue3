@@ -3,10 +3,11 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 
-import { friendService } from "@/api/friend.service";
+import { useFriendStore } from "../stores/friends";
 
 const nameRules = [(v) => !!v || "Name is required"];
 
+const store = useFriendStore();
 const form = ref(null);
 const valid = ref(true);
 let selectedFriend = ref({
@@ -37,19 +38,17 @@ const submit = async () => {
   };
 
   if (editing) {
-    await friendService.update(submission);
+    await store.updateFriend(submission);
   } else {
-    await friendService.create(submission);
+    await store.addFriend(submission);
   }
   router.push({ name: "people" });
 };
 
-onMounted(async () => {
+onMounted(() => {
   if (props.id) {
-    const resp = await friendService.get(props.id);
-
+    selectedFriend.value = store.friendById(props.id);
     editing = true;
-    selectedFriend.value = resp.data;
   }
 });
 
