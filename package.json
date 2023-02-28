@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@mdi/font": "^7.1.96",
+    "@pinia/testing": "^0.0.15",
     "@rushstack/eslint-patch": "^1.1.4",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
